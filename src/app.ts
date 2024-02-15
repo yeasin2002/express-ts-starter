@@ -6,8 +6,7 @@ import express from "express";
 import helmet from "helmet";
 import kleur from "kleur";
 
-import { PORT } from "./app.config";
-import { reqLogger } from "./utils";
+import { port, reqLogger } from "./utils";
 
 import { connectDB } from "./utils";
 
@@ -27,13 +26,13 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-app.listen(PORT, async () => {
+app.listen(port, async () => {
     await connectDB();
     console.log(
         "⚡",
         kleur
             .bgGreen()
             .white()
-            .bold(`Server running on http://localhost:${PORT}`)
+            .bold(`Server running on http://localhost:${port}`)
     );
 });
