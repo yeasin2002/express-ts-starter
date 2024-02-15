@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+
+pnpm-lock.yaml/*
+package-lock.json
+yarn.lock
+
+
+tsconfig.json
+nodemon.json
+
+.eslintrc.cjs
+
+
