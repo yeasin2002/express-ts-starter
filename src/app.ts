@@ -3,31 +3,31 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import "express-async-errors";
+import expressMongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 import kleur from "kleur";
+import morgan from "morgan";
 
-import { port, reqLogger } from "./utils";
-
-import { connectDB } from "./utils";
+// Local imports
+import { defaultErrorHandler, notFoundHandler } from "./middlewares";
+import { rootRouter } from "./router";
+import { port } from "./utils";
 
 const app = express();
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(reqLogger);
-app.use(
-    cors({
-        credentials: true,
-    })
-);
+app.use(cors());
+app.use(expressMongoSanitize());
+app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-});
+app.use("/", rootRouter);
+app.use(notFoundHandler);
+app.use(defaultErrorHandler);
 
-app.listen(port, async () => {
-    await connectDB();
+app.listen(port, () => {
     console.log(
         "⚡",
         kleur
