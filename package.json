@@ -3,8 +3,8 @@
     "main": "dist/app.js",
     "scripts": {
         "dev": "nodemon",
-        "build": "rimraf dist && tsc ",
-        "preview": "cross-env NODE_ENV=production node dist/app.js",
+        "build": "rimraf dist && swc src --out-dir dist",
+        "start": "cross-env NODE_ENV=production node ./dist/src/app.js",
         "formate": "prettier --write \"src/**/*.ts\" &&  eslint ./src --ext .ts && tsc --noEmit",
         "clear": "concurrently  \" npx rimraf dist\"    \" npx rimraf build\"    \" npx rimraf node_modules \"  && pnpm i "
     },
@@ -27,6 +27,8 @@
         "multer": "1.4.5-lts.1"
     },
     "devDependencies": {
+        "@swc/cli": "^0.3.9",
+        "@swc/core": "^1.4.2",
         "@types/bcryptjs": "^2.4.6",
         "@types/body-parser": "^1.19.5",
         "@types/compression": "^1.7.2",
@@ -41,13 +43,13 @@
         "@typescript-eslint/eslint-plugin": "^6.10.0",
         "@typescript-eslint/parser": "^6.10.0",
         "eslint": "^8.53.0",
+        "kleur": "^4.1.5",
         "morgan": "^1.10.0",
+        "nodemailer": "^6.9.9",
         "nodemon": "^3.0.3",
         "prettier": "^3.0.3",
-        "ts-node": "^10.9.1",
-        "typescript": "^4.9.5",
         "rimraf": "^5.0.5",
-        "nodemailer": "^6.9.9",
-        "kleur": "^4.1.5"
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.5"
     }
 }

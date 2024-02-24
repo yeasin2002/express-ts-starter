@@ -19,11 +19,11 @@ npm run build
 #### Start Build Server (After Build)
 
 ```bash
-npm run  preview
+npm run  start
 ```
 
 #### Shortcut for Build and Preview
 
 ```bash
-npm run build && npm run preview
+npm run build && npm run start
 ```

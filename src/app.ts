@@ -9,6 +9,8 @@ import helmet from "helmet";
 import kleur from "kleur";
 import morgan from "morgan";
 
+
+
 // Local imports
 import { defaultErrorHandler, notFoundHandler } from "./middlewares";
 import { rootRouter } from "./router";
@@ -26,6 +28,8 @@ app.use(morgan("dev"));
 app.use("/", rootRouter);
 app.use(notFoundHandler);
 app.use(defaultErrorHandler);
+
+
 
 app.listen(port, () => {
     console.log(
