@@ -3,11 +3,12 @@
     "main": "dist/app.js",
     "scripts": {
         "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
-        "watch-compile": "swc src -w --out-dir dist",
-        "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/src/app.js",
         "build": "swc src -d dist",
         "start": "cross-env NODE_ENV=production node ./dist/src/app.js ",
-        "formate": "prettier --write \"src/**/*.ts\" &&  eslint ./src --ext .ts && tsc --noEmit"
+        "watch-compile": "swc src -w --out-dir dist",
+        "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/src/app.js",
+        "formate": "prettier --write \"src/**/*.ts\" &&  eslint ./src --ext .ts && tsc --noEmit",
+        "lint": "oxlint ./src  "
     },
     "dependencies": {
         "body-parser": "^1.20.2",
@@ -43,6 +44,7 @@
         "morgan": "^1.10.0",
         "nodemailer": "^6.9.9",
         "nodemon": "^3.0.3",
+        "oxlint": "^0.2.10",
         "prettier": "^3.0.3",
         "typescript": "^4.9.5"
     }

@@ -10,6 +10,8 @@ Kindly Star the Repository if you find it useful 🌟 and feel free to contribut
 npm run dev
 ```
 
+Note: For the first time, this might throw an error, but it will work after the first time. This is because the `dist` folder is not created yet.
+
 #### Build
 
 ```bash
