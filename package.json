@@ -38,7 +38,7 @@
         "@types/node": "^18.18.9",
         "@types/nodemailer": "^6.4.14",
         "@typescript-eslint/eslint-plugin": "^6.10.0",
-        "@typescript-eslint/parser": "^6.10.0",
+        "@typescript-eslint/parser": "^7.4.0",
         "concurrently": "^8.2.2",
         "eslint": "^8.53.0",
         "morgan": "^1.10.0",
