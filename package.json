@@ -3,6 +3,7 @@
     "main": "dist/app.js",
     "scripts": {
         "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
+        "dev:bun": "bun --hot ./src/app.ts",
         "build": "swc src -d dist",
         "start": "cross-env NODE_ENV=production node ./dist/src/app.js ",
         "watch-compile": "swc src -w --out-dir dist",
