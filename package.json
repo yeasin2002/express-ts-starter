@@ -41,7 +41,7 @@
         "@typescript-eslint/eslint-plugin": "^7.4.0",
         "@typescript-eslint/parser": "^7.4.0",
         "concurrently": "^8.2.2",
-        "eslint": "^8.53.0",
+        "eslint": "^9.1.0",
         "morgan": "^1.10.0",
         "nodemailer": "^6.9.9",
         "nodemon": "^3.0.3",
