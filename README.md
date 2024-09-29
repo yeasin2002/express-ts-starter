@@ -1,31 +1,15 @@
-### TypeScript - Express Starter
+# .
 
-This is a starter project for TypeScript and Express. It includes a basic setup for a REST API with TypeScript and Express.
-
-Kindly Star the Repository if you find it useful 🌟 and feel free to contribute if you think something can be improved.
-
-#### Development Server
+To install dependencies:
 
 ```bash
-npm run dev
+bun install
 ```
 
-Note: For the first time, this might throw an error, but it will work after the first time. This is because the `dist` folder is not created yet.
-
-#### Build
+To run:
 
 ```bash
-npm run build
+bun run index.ts
 ```
 
-#### Start Build Server (After Build)
-
-```bash
-npm run  start
-```
-
-#### Shortcut for Build and Preview
-
-```bash
-npm run build && npm run start
-```
+This project was created using `bun init` in bun v1.1.10. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
