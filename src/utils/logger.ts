@@ -1,9 +1,9 @@
 import winston from 'winston';
 import path from 'path';
 
-const logFilePath = path.join(__dirname, '../../log');
+const logFilePath = process.cwd() + '/logs';
 
-export const logger = winston.createLogger({
+export const winstonLogger = winston.createLogger({
   level: 'info', // Log level to capture
   format: winston.format.combine(
     winston.format.timestamp(), // Add timestamps to logs
@@ -18,7 +18,7 @@ export const logger = winston.createLogger({
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(
+  winstonLogger.add(
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(), // Add colors for console logs

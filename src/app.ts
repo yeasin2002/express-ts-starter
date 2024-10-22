@@ -1,21 +1,42 @@
-import express, { Request, Response } from 'express';
 import { PORT } from './utils/exportEnv';
-import { logger } from './utils';
+import { winstonLogger } from './utils';
+import morgan from 'morgan';
 
-const app = express();
+import {
+  globalErrorHandler,
+  globalNotFoundHandler,
+} from './middlewares/common';
 
-app.use(express.json());
+import express from 'express';
+import type { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import path from 'path';
 
-app.get('/', (request: Request, response: Response) => {
-  logger.info('GET / - Home route accessed');
-  response.status(200).send('Hello Yeasin');
-});
+const init = () => {
+  const app = express();
+  app.use(express.static(path.join(__dirname, 'public')));
 
-app
-  .listen(PORT, () => {
-    console.log('Server running at PORT: ', PORT);
-  })
-  .on('error', (error) => {
-    // gracefully handle error
-    throw new Error(error.message);
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cors());
+  app.use(helmet());
+  app.use(compression());
+  app.use(morgan('dev'));
+
+  app.get('/', (req: Request, res: Response) => {
+    winstonLogger.info('Log');
+    res.send(`Hello, TypeScript Express!  ${PORT} `);
   });
+
+  app.use(globalNotFoundHandler);
+  app.use(globalErrorHandler);
+
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+};
+
+init();

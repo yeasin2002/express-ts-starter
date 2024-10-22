@@ -163,6 +163,7 @@ dist
 # yarn v2
 
 .yarn/cache
+yarn.lock/*
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
@@ -173,3 +174,10 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+
+# lock files 
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+bun.lockb
