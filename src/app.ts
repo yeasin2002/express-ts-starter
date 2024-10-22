@@ -1,5 +1,5 @@
-import { PORT } from './utils/exportEnv';
-import { winstonLogger } from './utils';
+import { PORT } from './config/envs';
+import { winstonLogger } from './config';
 import morgan from 'morgan';
 
 import {
