@@ -3,5 +3,8 @@
     "singleQuote": true,
     "trailingComma": "all",
     "tabWidth": 2,
-    "printWidth": 80
+    "printWidth": 80,
+    "plugins": [
+        "@ianvs/prettier-plugin-sort-imports"
+    ]
 }
