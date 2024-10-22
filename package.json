@@ -10,12 +10,20 @@
   },
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "npx tsc && node dist/app.js"
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "lint": "eslint 'src/**/*.{ts,js}'",
+    "format": "prettier --write 'src/**/*.{ts,js,json,md}'"
   },
   "dependencies": {
     "@types/node": "^22.7.8",
     "dotenv": "^16.4.5",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "express": "^5.0.1",
+    "prettier": "^3.3.3",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
   }
 }
