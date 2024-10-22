@@ -1,60 +1,16 @@
 {
-  "name": "talent-trove-server",
-  "module": "src/app.ts",
+  "name": "express-ts-starter",
+  "module": "index.ts",
   "type": "module",
-  "scripts": {
-    "dev": "bun --hot run src/app.ts",
-    "build": "rimraf dist && swc src -d dist",
-    "start": "bun run dist/src/app.js",
-    "lint": "eslint \"src/**/*.ts\" --no-ignore",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix --no-ignore",
-    "format": "prettier --write \"src/**/*.{js,ts,json,md}\" ",
-    "format:check": "prettier --check \"src/**/*.{js,ts,json,md}\" ",
-    "prepare": "husky",
-    "lint-staged": "lint-staged"
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^5.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@types/express": "^5.0.0",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.3",
-    "chalk": "^5.3.0",
-    "compression": "^1.7.4",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "eslint-plugin-node": "^11.1.0",
-    "express": "^4.21.0",
-    "express-rate-limit": "^7.4.0",
-    "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "lint-staged": "^15.2.10",
-    "module-alias": "^2.2.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.11.1",
-    "@swc/cli": "^0.4.1-nightly.20240914",
-    "@swc/core": "^1.7.26",
-    "@types/bun": "latest",
-    "@types/compression": "^1.7.5",
-    "@types/cors": "^2.8.17",
-    "@types/node": "^22.7.4",
-    "@typescript-eslint/eslint-plugin": "^8.7.0",
-    "@typescript-eslint/parser": "^8.7.0",
-    "eslint": "^9.11.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "globals": "^15.9.0",
-    "husky": "^9.1.6",
-    "prettier": "^3.3.3",
-    "rimraf": "^6.0.1",
-    "tsconfig-paths": "^4.2.0",
-    "typescript-eslint": "^8.7.0"
-  },
-  "_moduleAliases": {
-    "@": "src"
+    "dotenv": "^16.4.5",
+    "express": "^5.0.1"
   }
 }
