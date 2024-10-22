@@ -1,9 +1,15 @@
-### Express TS Starter
+# express-ts-starter
 
-#### Features
+To install dependencies:
 
- -  Basic Express Server 
- - Linting and Formatting, pre-commit
- - Standard Fold Structure
- - Custom import aliases 
- - TypeScript Support and Project Build with SWC
+```bash
+bun install
+```
+
+To run:
+
+```bash
+bun run index.ts
+```
+
+This project was created using `bun init` in bun v1.1.31. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

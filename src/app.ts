@@ -1,34 +1,42 @@
-import "module-alias/register";
+import { PORT } from './utils/exportEnv';
+import { winstonLogger } from './utils';
+import morgan from 'morgan';
 
-import express from "express";
-import type { Request, Response } from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import helmet from "helmet";
-import compression from "compression";
+import {
+  globalErrorHandler,
+  globalNotFoundHandler,
+} from './middlewares/common';
 
-import { logger } from "@/Middlewares";
-import { limiter, defaultErrorHandler, notFoundHandler } from "@/lib";
-import { port } from "@/config";
+import express from 'express';
+import type { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import path from 'path';
 
-const app = express();
+const init = () => {
+  const app = express();
+  app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
-app.use(helmet());
-app.use(compression());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cors());
+  app.use(helmet());
+  app.use(compression());
+  app.use(morgan('dev'));
 
-app.use(logger());
-app.use(limiter);
+  app.get('/', (req: Request, res: Response) => {
+    winstonLogger.info('Log');
+    res.send(`Hello, TypeScript Express!  ${PORT} `);
+  });
 
-app.get("/", (req: Request, res: Response) => {
-    res.send(`Hello, TypeScript Express!  ${port} `);
-});
+  app.use(globalNotFoundHandler);
+  app.use(globalErrorHandler);
 
-app.use(notFoundHandler);
-app.use(defaultErrorHandler);
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+};
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+init();
