@@ -15,8 +15,9 @@ import helmet from 'helmet';
 import compression from 'compression';
 import path from 'path';
 
+export  const app = express();
+
 const init = () => {
-  const app = express();
   app.use(express.static(path.join(__dirname, 'public')));
 
   app.use(bodyParser.json());
@@ -28,7 +29,7 @@ const init = () => {
 
   app.get('/', (req: Request, res: Response) => {
     winstonLogger.info('Log');
-    res.send(`Hello, TypeScript Express!  ${PORT} `);
+    res.status(200).json({ data: 'Hello, world!' });
   });
 
   app.use(globalNotFoundHandler);
