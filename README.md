@@ -21,6 +21,9 @@ project-root/
 │ │ │ ├── user.route.ts                   # User routes
 │ │ │ ├── user.validation.ts            # User input validation (optional)
 │ │ │ └── user.service.ts                # User-specific services
+│ ├──  database/
+│ │ ├──  Redis.database.js
+│ │ ├── Mongo.database.js
 │ │ └── auth/
 │ │ ├── auth.controller.ts               # Auth controller
 │ │ ├── auth.route.ts                     # Auth routes
