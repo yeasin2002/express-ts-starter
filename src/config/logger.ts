@@ -1,6 +1,6 @@
 import winston from 'winston';
 
-const logFilePath = process.cwd() + '/logs';
+// const logFilePath = process.cwd() + '/logs';
 
 export const winstonLogger = winston.createLogger({
   level: 'info',
