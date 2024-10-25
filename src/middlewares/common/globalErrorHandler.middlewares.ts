@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
 export const globalErrorHandler = (
   err: Error,
@@ -7,5 +7,5 @@ export const globalErrorHandler = (
   next: NextFunction,
 ) => {
   console.error(err.stack);
-  res.status(500).send({ message: 'Internal Server Error' });
+  res.status(500).send({ message: "Internal Server Error" });
 };
