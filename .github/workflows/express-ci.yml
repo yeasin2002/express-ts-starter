@@ -22,20 +22,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Enable corepack for Yarn Berry support
-      - name: Enable Corepack
-        run: corepack enable
-
-      # Explicitly set Yarn version
-      - name: Set Yarn version
-        run: yarn set version stable
-
-      # Install dependencies
+      # Install dependencies using classic Yarn
       - name: Install Dependencies
         run: |
-          yarn install --immutable
+          npm install -g yarn
+          yarn install
 
-      # Run checks
       - name: Type check
         run: yarn tsc --noEmit
 
