@@ -10,7 +10,7 @@
     "build": "rimraf dist && tsc --noEmit && npm run lint &&  swc src -d  dist --out-dir dist --source-maps --strip-leading-paths",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
-    "test": "jest",
+    "test": "vitest",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up",
     "docker:down": "docker-compose down",
@@ -24,7 +24,6 @@
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
     "helmet": "^8.0.0",
-    "jest": "^29.7.0",
     "morgan": "^1.10.0",
     "supertest": "^7.0.0"
   },
@@ -40,21 +39,19 @@
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.7.8",
+    "@types/supertest": "^6.0.2",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.11.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.11.0",
-    "winston": "^3.15.0",
-    "ts-jest": "^29.2.5",
-    "@types/jest": "^29.5.13",
-    "@types/supertest": "^6.0.2"
+    "vitest": "^2.1.5",
+    "winston": "^3.15.0"
   }
 }
