@@ -21,11 +21,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      # Enable corepack for Yarn Berry support
+      - name: Enable Corepack
+        run: corepack enable
 
+      # Explicitly set Yarn version
+      - name: Set Yarn version
+        run: yarn set version stable
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: |
+          yarn install --immutable
+
+      # Run checks
       - name: Type check
         run: yarn tsc --noEmit
 

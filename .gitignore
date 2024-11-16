@@ -176,8 +176,3 @@ yarn.lock/*
 .DS_Store
 
 
-# lock files 
-yarn.lock
-package-lock.json
-pnpm-lock.yaml
-bun.lockb
