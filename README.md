@@ -7,6 +7,22 @@
 - Standard Fold Structure
 - Custom import aliases
 - TypeScript Support and Config
+- Basic CLI for crating new module
+
+### How to use CLI
+
+```bash
+npm run cli
+```
+
+or
+
+```bash
+make cli
+```
+
+- It will ask you module name
+- Based on that will create controller, route and validation files inside API folder
 
 ### Recommended Folder Structure:
 
@@ -21,6 +37,11 @@ project-root/
 │ │ │ ├── user.route.ts                   # User routes
 │ │ │ ├── user.validation.ts            # User input validation (optional)
 │ │ │ └── user.service.ts                # User-specific services
+│ │ ├── auth/
+│ │ │ ├── auth.controller.ts             # auth controller
+│ │ │ ├── auth.route.ts                   # auth routes
+│ │ │ ├── auth.validation.ts            # auth input validation (optional)
+│ │ │ └── auth.service.ts                # auth-specific services
 │ ├──  database/
 │ │ ├──  Redis.database.js
 │ │ ├── Mongo.database.js
