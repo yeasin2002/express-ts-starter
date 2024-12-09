@@ -30,7 +30,7 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
-    "@swc/cli": "^0.5.0",
+    "@swc/cli": "^0.5.2",
     "@swc/core": "^1.7.39",
     "@types/bun": "latest",
     "@types/compression": "^1.7.5",
