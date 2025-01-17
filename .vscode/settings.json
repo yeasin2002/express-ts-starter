@@ -2,5 +2,14 @@
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.formatOnSave": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "tsconfig.json": "tsconfig.*.json, global.d.ts",
+    "vite.config.*": "jsconfig*, vite.config.*, cypress.config.*, playwright.config.*",
+    "Dockerfile": "docker-compose.*, .dockerignore",
+    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, Makefile, bun.lockb",
+    "README.md": "LICENSE",
+    ".swcrc": "vitest.config.*, jest.config.*, .lintstagedrc.*"
   }
 }
