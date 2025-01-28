@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
+  "$schema": "https://swc.rs/schema.json",
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -30,6 +30,6 @@
     "lazy": false,
     "noInterop": false
   },
-  "sourceMaps": true,
+  "sourceMaps": false,
   "exclude": ["node_modules", "dist", "./**/*.js"]
 }
