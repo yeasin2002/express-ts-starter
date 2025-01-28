@@ -7,9 +7,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/app.js",
     "dev": "tsx watch --require tsconfig-paths/register ./src/app.ts",
-    "build": "tsc --noEmit && npm run lint &&  swc src -d  dist --out-dir dist --source-maps --strip-leading-paths",
-    "build:dev": " rimraf /dist &&  swc src -d  dist --out-dir dist --source-maps --strip-leading-paths",
-    "lint": "eslint 'src/**/*.{ts,js}'",
+    "build": "rimraf /dist && tsc --noEmit && npm run lint &&  swc src -d  dist --out-dir dist --source-maps --strip-leading-paths",
+    "lint": "eslint ./src",
     "format": "prettier --write 'src/**/*.{ts,js,json,md}'",
     "test": "vitest",
     "docker:build": "docker-compose build",
