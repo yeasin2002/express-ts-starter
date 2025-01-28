@@ -1,34 +1,35 @@
 {
-    "$schema": "https://json.schemastore.org/swcrc",
-    "jsc": {
-        "parser": {
-            "syntax": "typescript",
-            "tsx": false,
-            "decorators": false,
-            "dynamicImport": false
-        },
-        "target": "es2016",
-        "loose": false,
-        "minify": {
-            "compress": false,
-            "mangle": false
-        },
-        "transform": {
-            "legacyDecorator": false,
-            "decoratorMetadata": false
-        }
+  "$schema": "https://json.schemastore.org/swcrc",
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": false,
+      "dynamicImport": false
     },
-    "module": {
-        "type": "commonjs",
-        "strict": true,
-        "strictMode": true,
-        "lazy": false,
-        "noInterop": false
+    "target": "es2016",
+    "loose": false,
+    "minify": {
+      "compress": false,
+      "mangle": false
     },
-    "sourceMaps": true,
-    "exclude": [
-        "node_modules",
-        "dist",
-        "./**/*.js"
-    ]
+    "transform": {
+      "legacyDecorator": false,
+      "decoratorMetadata": false
+    },
+    // type alias
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "module": {
+    "type": "commonjs",
+    "strict": true,
+    "strictMode": true,
+    "lazy": false,
+    "noInterop": false
+  },
+  "sourceMaps": true,
+  "exclude": ["node_modules", "dist", "./**/*.js"]
 }
