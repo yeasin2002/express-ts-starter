@@ -8,7 +8,7 @@
     "tsconfig.json": "tsconfig.*.json, global.d.ts",
     "vite.config.*": "jsconfig*, vite.config.*, cypress.config.*, playwright.config.*",
     "Dockerfile": "docker-compose.*, .dockerignore",
-    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, Makefile, bun.lockb",
+    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, Makefile, bun.lockb, bun.lock",
     "README.md": "LICENSE",
     ".swcrc": "vitest.config.*, jest.config.*, .lintstagedrc.*"
   }
