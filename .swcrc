@@ -5,13 +5,13 @@
       "syntax": "typescript",
       "tsx": false,
       "decorators": false,
-      "dynamicImport": false
+      "dynamicImport": true
     },
     "target": "es2016",
     "loose": false,
     "minify": {
-      "compress": false,
-      "mangle": false
+      "compress": true,
+      "mangle": true
     },
     "transform": {
       "legacyDecorator": false,
