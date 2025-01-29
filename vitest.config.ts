@@ -1,10 +1,13 @@
+import path from "path";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
     globals: true,
-    coverage: {
-      reporter: ["text", "json", "html"],
+    environment: "node",
+    include: ["**/*.{test,spec}.{js,ts}"],
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 });
