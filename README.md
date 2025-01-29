@@ -3,6 +3,7 @@
 ### Features
 
 - Basic Express Server
+- import aliases like ` @/controller` instead of `../../controller`
 - Linting and Formatting, pre-commit
 - Standard Fold Structure
 - Custom import aliases

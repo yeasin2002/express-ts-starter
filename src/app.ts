@@ -1,17 +1,17 @@
 import path from "path";
-import bodyParser from "body-parser";
-import compression from "compression";
-import cors from "cors";
-import express from "express";
-import type { Request, Response } from "express";
-import helmet from "helmet";
-import morgan from "morgan";
-import { winstonLogger } from "./config";
-import { PORT } from "./config/envs";
+import { PORT } from "@/config";
 import {
   globalErrorHandler,
   globalNotFoundHandler,
-} from "./middlewares/common";
+} from "@/middlewares/common";
+import bodyParser from "body-parser";
+import compression from "compression";
+import cors from "cors";
+import type { Request, Response } from "express";
+import express from "express";
+import helmet from "helmet";
+import morgan from "morgan";
+import { winstonLogger } from "./config";
 
 export const app = express();
 
@@ -26,7 +26,7 @@ app.use(morgan("dev"));
 
 app.get("/", (req: Request, res: Response) => {
   winstonLogger.info("Log: ");
-  res.status(200).json({ data: "Hello, world!" });
+  res.status(200).json({ data: `Hello, world! - ${PORT}` });
 });
 
 app.use(globalNotFoundHandler);
