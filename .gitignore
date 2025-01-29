@@ -168,6 +168,7 @@ yarn.lock/*
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+bun.*
 
 # IntelliJ based IDEs
 .idea
