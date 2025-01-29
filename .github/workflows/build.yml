@@ -22,23 +22,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Install dependencies using classic Yarn
+      # Install dependencies using classic bun
       - name: Install Dependencies
         run: |
-          npm install -g yarn
-          yarn install
+          npm install -g bun
+          bun install
 
       - name: Type check
-        run: yarn tsc --noEmit
+        run: bun tsc --noEmit
 
       - name: Lint
-        run: yarn lint
+        run: bun lint
 
       - name: Run tests
-        run: yarn test
+        run: bun test
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       # Optional: Cache the build output
       - name: Cache build output
