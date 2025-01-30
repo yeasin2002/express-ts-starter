@@ -19,6 +19,8 @@
     "cli": "tsx  ./script/index.ts"
   },
   "dependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.7",
     "compression": "^1.7.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -26,6 +28,8 @@
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
     "supertest": "^7.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
