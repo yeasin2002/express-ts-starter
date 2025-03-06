@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "express-ts-starter",
+  "description": "An Express boilerplate backend",
+  "author": "Md Kawsar Islam Yeasin",
+  "repository": "yeasin2002/express-ts-starter",
   "module": "src/app.ts",
   "type": "commonjs",
   "license": "MIT",
