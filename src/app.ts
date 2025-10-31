@@ -9,11 +9,8 @@ import swaggerUi from "swagger-ui-express";
 
 // common routes
 
-import { connectDB, generateOpenAPIDocument } from "@/lib";
+import { generateOpenAPIDocument } from "@/lib";
 import { errorHandler, notFoundHandler } from "@/middleware";
-
-
-
 
 import { getLocalIP } from "./lib/get-my-ip";
 import { morganDevFormat } from "./lib/morgan";
@@ -53,19 +50,16 @@ app.get("/api-docs.json", (_req, res) => {
   res.send(openApiDocument);
 });
 
-
-
-
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 app.listen(port, async () => {
-	await connectDB();
+  // await connectDB();
 
-	console.log(`🚀 Server is running on port http://localhost:${port}`);
-	console.log(`✨ Server is running on port http://${getLocalIP()}:${port} \n`);
+  console.log(`🚀 Server is running on port http://localhost:${port}`);
+  console.log(`✨ Server is running on port http://${getLocalIP()}:${port} \n`);
 
-	console.log(`✍️ Swagger doc: http://localhost:${port}/swagger`);
-	console.log(`📋 Scaler doc: http://localhost:${port}/scaler \n`);
+  console.log(`✍️ Swagger doc: http://localhost:${port}/swagger`);
+  console.log(`📋 Scaler doc: http://localhost:${port}/scaler \n`);
 });
