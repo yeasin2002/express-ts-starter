@@ -1,0 +1,278 @@
+### Category API Tests
+@baseUrl = http://localhost:4000
+@adminToken = your-admin-access-token-here
+
+###############################################
+# Public Routes (No Auth Required)
+###############################################
+
+### 1. Get All Categories
+GET {{baseUrl}}/api/category
+
+### 2. Get Categories with Pagination
+GET {{baseUrl}}/api/category?page=1&limit=5
+
+### 3. Search Categories
+GET {{baseUrl}}/api/category?search=plumbing
+
+### 4. Search with Pagination
+GET {{baseUrl}}/api/category?search=electrical&page=1&limit=10
+
+### 5. Get Category by ID
+GET {{baseUrl}}/api/category/507f1f77bcf86cd799439011
+
+###############################################
+# Admin Routes (Auth Required)
+###############################################
+
+### 6. Create Category - Plumbing
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Plumbing",
+  "icon": "🔧",
+  "description": "Professional plumbing services including repairs, installations, and maintenance for residential and commercial properties"
+}
+
+### 7. Create Category - Electrical
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Electrical",
+  "icon": "⚡",
+  "description": "Licensed electricians for wiring, repairs, installations, and electrical system maintenance"
+}
+
+### 8. Create Category - Carpentry
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Carpentry",
+  "icon": "🪚",
+  "description": "Skilled carpenters for furniture making, repairs, custom woodwork, and carpentry services"
+}
+
+### 9. Create Category - Cleaning
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Cleaning",
+  "icon": "🧹",
+  "description": "Professional cleaning services for homes, offices, and commercial spaces including deep cleaning"
+}
+
+### 10. Create Category - Painting
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Painting",
+  "icon": "🎨",
+  "description": "Interior and exterior painting services for residential and commercial properties"
+}
+
+### 11. Create Category - HVAC
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "HVAC",
+  "icon": "❄️",
+  "description": "Heating, ventilation, and air conditioning installation, repair, and maintenance services"
+}
+
+### 12. Create Category - Landscaping
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Landscaping",
+  "icon": "🌳",
+  "description": "Garden maintenance, lawn care, landscaping design, and outdoor beautification services"
+}
+
+### 13. Create Category - Roofing
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Roofing",
+  "icon": "🏠",
+  "description": "Roof repairs, installations, maintenance, and inspection services for all types of roofing"
+}
+
+### 14. Create Category - Appliance Repair
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Appliance Repair",
+  "icon": "🔌",
+  "description": "Repair and maintenance of household appliances including refrigerators, washers, and dryers"
+}
+
+### 15. Create Category - Moving
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Moving",
+  "icon": "📦",
+  "description": "Professional moving and relocation services for residential and commercial moves"
+}
+
+### 16. Update Category
+PUT {{baseUrl}}/api/category/REPLACE_WITH_CATEGORY_ID
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Professional Plumbing",
+  "description": "Expert plumbing services for all your residential and commercial plumbing needs"
+}
+
+### 17. Update Category - Partial Update
+PUT {{baseUrl}}/api/category/REPLACE_WITH_CATEGORY_ID
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "icon": "🚰"
+}
+
+### 18. Delete Category
+DELETE {{baseUrl}}/api/category/REPLACE_WITH_CATEGORY_ID
+Authorization: Bearer {{adminToken}}
+
+###############################################
+# Error Test Cases
+###############################################
+
+### Test: Create with Missing Fields
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Test"
+}
+
+### Test: Create with Short Name
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "A",
+  "icon": "🔧",
+  "description": "Short description"
+}
+
+### Test: Create with Short Description
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Test Category",
+  "icon": "🔧",
+  "description": "Short"
+}
+
+### Test: Create Duplicate Category
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Plumbing",
+  "icon": "🔧",
+  "description": "This should fail as duplicate"
+}
+
+### Test: Get Non-existent Category
+GET {{baseUrl}}/api/category/000000000000000000000000
+
+### Test: Update Non-existent Category
+PUT {{baseUrl}}/api/category/000000000000000000000000
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Name"
+}
+
+### Test: Delete Non-existent Category
+DELETE {{baseUrl}}/api/category/000000000000000000000000
+Authorization: Bearer {{adminToken}}
+
+### Test: Create Without Auth Token
+POST {{baseUrl}}/api/category
+Content-Type: application/json
+
+{
+  "name": "Unauthorized Test",
+  "icon": "🔧",
+  "description": "This should fail without auth token"
+}
+
+### Test: Invalid Search Query
+GET {{baseUrl}}/api/category?page=abc&limit=xyz
+
+###############################################
+# Complete Flow Test
+###############################################
+
+### Step 1: Create a test category
+POST {{baseUrl}}/api/category
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Test Category",
+  "icon": "🧪",
+  "description": "This is a test category for demonstration purposes"
+}
+
+### Step 2: Get all categories (verify it's in the list)
+GET {{baseUrl}}/api/category
+
+### Step 3: Search for the test category
+GET {{baseUrl}}/api/category?search=test
+
+### Step 4: Get the test category by ID (use ID from Step 1)
+GET {{baseUrl}}/api/category/REPLACE_WITH_ID_FROM_STEP_1
+
+### Step 5: Update the test category
+PUT {{baseUrl}}/api/category/REPLACE_WITH_ID_FROM_STEP_1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Test Category",
+  "description": "This category has been updated successfully"
+}
+
+### Step 6: Verify the update
+GET {{baseUrl}}/api/category/REPLACE_WITH_ID_FROM_STEP_1
+
+### Step 7: Delete the test category
+DELETE {{baseUrl}}/api/category/REPLACE_WITH_ID_FROM_STEP_1
+Authorization: Bearer {{adminToken}}
+
+### Step 8: Verify deletion (should return 404)
+GET {{baseUrl}}/api/category/REPLACE_WITH_ID_FROM_STEP_1

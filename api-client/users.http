@@ -1,0 +1,62 @@
+### Get all users (no filters)
+GET http://localhost:4000/api/users
+
+### Get all users with pagination
+GET http://localhost:4000/api/users?page=1&limit=10
+
+### Search users by name
+GET http://localhost:4000/api/users?search=john
+
+### Filter users by role
+GET http://localhost:4000/api/users?role=contractor
+
+### Filter users by location
+GET http://localhost:4000/api/users?location=507f1f77bcf86cd799439011
+
+### Filter users by category
+GET http://localhost:4000/api/users?category=507f1f77bcf86cd799439012
+
+### Combined filters with pagination
+GET http://localhost:4000/api/users?search=john&role=contractor&page=1&limit=5
+
+### Sort users by name ascending
+GET http://localhost:4000/api/users?sortBy=full_name&sortOrder=asc
+
+### Sort users by creation date descending (default)
+GET http://localhost:4000/api/users?sortBy=createdAt&sortOrder=desc
+
+### Full example with all parameters
+GET http://localhost:4000/api/users?search=john&role=contractor&location=507f1f77bcf86cd799439011&category=507f1f77bcf86cd799439012&page=2&limit=20&sortBy=createdAt&sortOrder=desc
+
+###############################################
+# Admin User Management Endpoints
+###############################################
+
+### Admin: Get all users with pagination
+GET http://localhost:4000/api/admin/users?page=1&limit=10
+
+### Admin: Search and filter users
+GET http://localhost:4000/api/admin/users?search=john&role=customer&page=1&limit=5
+
+### Admin: Get single user by ID
+GET http://localhost:4000/api/admin/users/507f1f77bcf86cd799439011
+
+### Admin: Suspend user
+PATCH http://localhost:4000/api/admin/users/507f1f77bcf86cd799439011/suspend
+Content-Type: application/json
+
+{
+  "suspend": true,
+  "reason": "Violation of terms of service"
+}
+
+### Admin: Unsuspend user
+PATCH http://localhost:4000/api/admin/users/507f1f77bcf86cd799439011/suspend
+Content-Type: application/json
+
+{
+  "suspend": false
+}
+
+### Admin: Delete user
+DELETE http://localhost:4000/api/admin/users/507f1f77bcf86cd799439011

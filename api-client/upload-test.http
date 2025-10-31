@@ -1,0 +1,89 @@
+### Image Upload Test File
+### Use with REST Client extension in VS Code
+
+@baseUrl = http://localhost:4000
+@token = YOUR_JWT_TOKEN_HERE
+
+### Upload JPEG image (field name: image)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload PNG image (field name: image)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.png"
+Content-Type: image/png
+
+< ./path/to/your/image.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload SVG image (field name: image)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.svg"
+Content-Type: image/svg+xml
+
+< ./path/to/your/image.svg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Upload with alternative field name "file" (will also work now)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test with wrong field name (should return clear error)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="photo"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test with invalid file type (should return clear error)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test.pdf"
+Content-Type: application/pdf
+
+< ./path/to/your/file.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test file size limit (should fail if > 5MB)
+POST {{baseUrl}}/api/common/upload
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="large.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/large-image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

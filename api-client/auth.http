@@ -1,0 +1,209 @@
+### JobSphere Authentication API Tests
+### Base URL
+@baseUrl = http://localhost:4000
+@contentType = application/json
+
+    
+### Variables (update after each request)
+@accessToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGYzMjVmOTI1NzRkNTY4OTgwZTA0YzUiLCJlbWFpbCI6Im1ka2F3c2FyaXNsYW0yMDAyQGdtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTc2MDgwMDA3NCwiZXhwIjoxNzYwODAwOTc0fQ.Cpe1i8GlSzvoS8m2z8A_cIN6m1wje6sYgrKINt5rtI0
+@refreshToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGYzMjVmOTI1NzRkNTY4OTgwZTA0YzUiLCJlbWFpbCI6Im1ka2F3c2FyaXNsYW0yMDAyQGdtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsImp0aSI6ImM5M2ExZTY3N2UyY2ZmYTZhMDY2YmE0Nzk4MjA3MGE1IiwiaWF0IjoxNzYwODAwMDc0LCJleHAiOjE3NjMzOTIwNzR9.FkaCRdeQxDopuTD-vtxhAPpmJpM-g8HJBzL8GeiKLV0
+
+###############################################
+# 1. Register New User (Admin)
+###############################################
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "full_name": "Md Kawsar Islam",
+  "email": "mdkawsarislam2002@gmail.com",
+  "password": "yeasin2002",
+  "role": "admin",
+  "phone": "+1234567890"
+}
+
+###############################################
+# 2. Register New User (Contractor)
+###############################################
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "full_name": "Md Kawsar Islam",
+  "email": "mdkawsarislam2002@gmail.com",
+  "password": "yeasin2002",
+  "role": "contractor",
+  "phone": "+0987654321"
+}
+
+###############################################
+# 3.1. Login as Customer
+###############################################
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "password": "mdkawsarislam2002@gmail.com"
+}
+
+
+###############################################
+# 3.2. Login as Contractor
+###############################################
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "yeasin2002@gmail.com",
+  "password": "yeasin2002@gmail.com"
+}
+
+
+###############################################
+# 3.3. Login as Admin
+############################################### 
+POST {{baseUrl}}/api/admin/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "password": "yeasin2002"
+}
+
+
+###############################################
+# 4. Forgot Password (Request OTP)
+###############################################
+POST {{baseUrl}}/api/auth/forgot-password
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com"
+}
+
+###############################################
+# 5. Reset Password (Use OTP from console)
+###############################################
+POST {{baseUrl}}/api/auth/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "otp": "123456",
+  "newPassword": "newpassword123"
+}
+
+###############################################
+# 6. Refresh Access Token
+###############################################
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###############################################
+# 7. Get Current User (Protected Route)
+###############################################
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{accessToken}}
+
+###############################################
+# Error Cases
+###############################################
+
+### Register with existing email
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "full_name": "Duplicate User",
+  "email": "john@example.com",
+  "password": "password123",
+  "role": "customer"
+}
+
+### Login with wrong password
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "password": "wrongpassword"
+}
+
+### Login with non-existent email
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "notfound@example.com",
+  "password": "password123"
+}
+
+### Reset password with invalid OTP
+POST {{baseUrl}}/api/auth/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "otp": "000000",
+  "newPassword": "newpassword123"
+}
+
+### Refresh with invalid token
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "invalid-token"
+}
+
+### Access protected route without token
+GET {{baseUrl}}/api/auth/me
+
+###############################################
+# Validation Error Cases
+###############################################
+
+### Register with invalid email
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "full_name": "Test User",
+  "email": "invalid-email",
+  "password": "password123",
+  "role": "customer"
+}
+
+### Register with short password
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "full_name": "Test User",
+  "email": "test@example.com",
+  "password": "123",
+  "role": "customer"
+}
+
+### Login with missing fields
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com"
+}
+
+### Reset password with invalid OTP length
+POST {{baseUrl}}/api/auth/reset-password
+Content-Type: {{contentType}}
+
+{
+  "email": "mdkawsarislam2002@gmail.com",
+  "otp": "123",
+  "newPassword": "newpassword123"
+}
