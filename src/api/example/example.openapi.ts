@@ -1,6 +1,5 @@
 
 import { registry } from "@/lib/openapi";
-import { mediaTypeFormat, openAPITags } from "@/common/constants";
 
 // registry.register("example", exampleSchema);
 registry.registerPath({
