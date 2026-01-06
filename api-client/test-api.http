@@ -1,0 +1,62 @@
+# Test API endpoints
+# You can use this file with REST Client extension in VS Code
+
+### Health Check
+GET http://localhost:4000/
+
+### Get all users
+GET http://localhost:4000/api/user
+
+### Create a new user
+POST http://localhost:4000/api/user
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### Create user with validation error (missing name)
+POST http://localhost:4000/api/user
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com",
+  "password": "password123"
+}
+
+### Create user with validation error (invalid email)
+POST http://localhost:4000/api/user
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "invalid-email",
+  "password": "password123"
+}
+
+### Create user with validation error (short password)
+POST http://localhost:4000/api/user
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "password": "123"
+}
+
+### Update user (replace USER_ID with actual ID)
+PUT http://localhost:4000/api/user/USER_ID
+Content-Type: application/json
+
+{
+  "name": "John Smith",
+  "email": "john.smith@example.com"
+}
+
+### Delete user (replace USER_ID with actual ID)
+DELETE http://localhost:4000/api/user/USER_ID
+
+### Get OpenAPI documentation
+GET http://localhost:4000/api-docs.json
