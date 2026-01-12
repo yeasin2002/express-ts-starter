@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.1.0",
-    "@scalar/express-api-reference": "^0.8.22",
+    "@scalar/express-api-reference": "^0.8.32",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/nodemailer": "^7.0.2",

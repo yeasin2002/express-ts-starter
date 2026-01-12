@@ -12,8 +12,8 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(zod@4.1.12)
       '@scalar/express-api-reference':
-        specifier: ^0.8.22
-        version: 0.8.22
+        specifier: ^0.8.32
+        version: 0.8.32
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
@@ -750,20 +750,20 @@ packages:
   '@rolldown/pluginutils@1.0.0-beta.44':
     resolution: {integrity: sha512-g6eW7Zwnr2c5RADIoqziHoVs6b3W5QTQ4+qbpfjbkMJ9x+8Og211VW/oot2dj9dVwaK/UyC6Yo+02gV+wWQVNg==}
 
-  '@scalar/core@0.3.20':
-    resolution: {integrity: sha512-bIlrePx41pSvjDcaJPa9YVVhbSm0N9SKQm2Fzl489S0bUVToyXIQtMFVR4i+BmXGjOcATm/66ELW4vdXRjHoRA==}
+  '@scalar/core@0.3.30':
+    resolution: {integrity: sha512-eBp1phI8u/GZR+yy9SwRTr07n3+Va+xoZJVT6tczG799eynpXiQJuUQ4S2S1cb0cmOV0ZkwHRNG3ldMQHdJgWQ==}
     engines: {node: '>=20'}
 
-  '@scalar/express-api-reference@0.8.22':
-    resolution: {integrity: sha512-0oDxm+4oY6BmO2IWcvP0NCnyCBlPZ/gSv+1/jXmIAMO2KuD2uT2sC0bYde7D5c0j5v+G9Vxz1K/hyew1j7AQDQ==}
+  '@scalar/express-api-reference@0.8.32':
+    resolution: {integrity: sha512-p3xxDsv7kfVz+4Xp5/jSjJosaqFEVlyrGUZDI2slMhdBdhT/CC4AiQuNQtXq8we4G3KckTUc/mkmERRQ1btj3w==}
     engines: {node: '>=20'}
 
-  '@scalar/openapi-types@0.5.0':
-    resolution: {integrity: sha512-HJBcLa+/mPP+3TCcQngj/iW5UqynRosOQdEETXjmdy6Ngw8wBjwIcT6C86J5jufJ6sI8++HYnt+e7pAvp5FO6A==}
+  '@scalar/helpers@0.2.6':
+    resolution: {integrity: sha512-A471YFBCj7ZOlGIkAYnU8oYgeyts82ZNX+4UicrlmKv3eAQ+kwboN3Dy0R6u1lcA/+I/zzeXi/fBObsT7P9qTA==}
     engines: {node: '>=20'}
 
-  '@scalar/types@0.3.2':
-    resolution: {integrity: sha512-+X10CCvG57nAqYbTGteiSzRFQcMYm7DLfCRMeEfiWQ9Bq2ladat17XsMSvkvwcfpOSlsoepWf3P5dErERUSOQQ==}
+  '@scalar/types@0.5.6':
+    resolution: {integrity: sha512-yvTXYdSQPq8qmJ1zZPBRRB3RkkE2c0J3gIIMirX997yyVixrhtb0jmfM+9EZ2ZWXGx2JGLquGP10zY0nmnu75w==}
     engines: {node: '>=20'}
 
   '@scarf/scarf@1.4.0':
@@ -2286,9 +2286,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
-
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
@@ -3093,24 +3090,22 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-beta.44': {}
 
-  '@scalar/core@0.3.20':
+  '@scalar/core@0.3.30':
     dependencies:
-      '@scalar/types': 0.3.2
+      '@scalar/types': 0.5.6
 
-  '@scalar/express-api-reference@0.8.22':
+  '@scalar/express-api-reference@0.8.32':
     dependencies:
-      '@scalar/core': 0.3.20
+      '@scalar/core': 0.3.30
 
-  '@scalar/openapi-types@0.5.0':
-    dependencies:
-      zod: 4.1.11
+  '@scalar/helpers@0.2.6': {}
 
-  '@scalar/types@0.3.2':
+  '@scalar/types@0.5.6':
     dependencies:
-      '@scalar/openapi-types': 0.5.0
+      '@scalar/helpers': 0.2.6
       nanoid: 5.1.5
       type-fest: 5.0.0
-      zod: 4.1.11
+      zod: 4.1.12
 
   '@scarf/scarf@1.4.0': {}
 
@@ -4895,7 +4890,5 @@ snapshots:
 
   yocto-queue@0.1.0:
     optional: true
-
-  zod@4.1.11: {}
 
   zod@4.1.12: {}
