@@ -10,7 +10,7 @@
 	"backend": "express",
 	"runtime": "node",
 	"frontend": [],
-	"addons": ["husky", "oxlint", "ruler"],
+	"addons": ["lefthook", "oxlint", "ruler"],
 	"examples": [],
 	"auth": "none",
 	"packageManager": "pnpm",

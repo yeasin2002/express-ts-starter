@@ -54,7 +54,6 @@ express-ts-starter/
 │   ├── dependabot.yml                     # Dependabot package updates config
 │   └── workflows/
 │       └── build.yml                      # CI build and lint workflow
-├── .husky/                                # Git commit hooks
 ├── api-client/
 │   └── test-api.http                      # VS Code REST Client test request collection
 ├── doc/
@@ -113,6 +112,7 @@ express-ts-starter/
 ├── docker-compose.yml                     # PostgreSQL, Redis, and MinIO container configuration
 ├── drizzle.config.ts                      # Drizzle Kit migration configuration
 ├── globals.d.ts                           # Global TypeScript declarations & Request extensions
+├── lefthook.yml                           # Git hooks configuration (pre-commit, pre-push)
 ├── package.json                           # Scripts and dependency declarations
 ├── pnpm-lock.yaml                         # Deterministic pnpm lockfile
 ├── pnpm-workspace.yaml                    # Workspace config (pnpm settings)
@@ -384,7 +384,7 @@ flowchart TD
 | **Email** | `nodemailer` | `^7.0.10` | SMTP email transport |
 | **Logging** | `winston`<br>`winston-daily-rotate-file`<br>`morgan`<br>`chalk` | `^3.18.3`<br>`^5.0.0`<br>`^1.10.1`<br>`^5.6.2` | Structured multi-file rotation logging & colorized HTTP logs |
 | **Build** | `tsdown` | `^0.15.9` | High-speed esbuild-based bundler with DTS generation |
-| **Linting & Formatting** | `@biomejs/biome`<br>`oxlint`<br>`husky`<br>`lint-staged` | `2.2.6`<br>`^1.24.0`<br>`^9.1.7`<br>`^16.2.6` | Fast formatting, semantic linting, and git hooks |
+| **Linting & Formatting** | `@biomejs/biome`<br>`oxlint`<br>`lefthook` | `2.2.6`<br>`^1.24.0`<br>`^1.13.6` | Fast formatting, semantic linting, and git hooks |
 | **Configuration** | `dotenv` | `^17.2.3` | Environment variable management |
 
 ---

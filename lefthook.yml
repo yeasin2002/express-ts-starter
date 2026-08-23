@@ -1,0 +1,22 @@
+# Lefthook Git Hooks Configuration
+# https://lefthook.dev/
+
+pre-commit:
+  parallel: true
+  commands:
+    check-types:
+      run: pnpm check-types
+    oxlint:
+      run: pnpm oxlint
+    biome-format:
+      glob: "*.{js,ts,cjs,mjs,json,jsonc}"
+      run: pnpm biome format --write {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    check-types:
+      run: pnpm check-types
+    oxlint:
+      run: pnpm oxlint
