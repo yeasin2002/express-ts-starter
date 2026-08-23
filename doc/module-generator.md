@@ -9,7 +9,7 @@ This starter template includes an automated module scaffolding tool that generat
 ### Interactive Mode
 
 ```bash
-bun run generate:module
+pnpm generate:module
 ```
 
 The script will prompt for a module name and automatically generate all necessary files.
@@ -18,20 +18,20 @@ The script will prompt for a module name and automatically generate all necessar
 
 ```bash
 # Create a top-level module without prompt
-bun run generate:module --module auth
+pnpm generate:module --module job
 
 # Create a nested sub-module without prompt
-bun run generate:module --sub admin --module user
+pnpm generate:module --sub admin --module user
 ```
 
 ### Nested Module Mode (with --sub flag)
 
 ```bash
 # Interactive: prompts for sub-module name
-bun run generate:module --sub admin
+pnpm generate:module --sub admin
 
 # Direct: no prompts
-bun run generate:module --sub admin --module dashboard
+pnpm generate:module --sub admin --module dashboard
 ```
 
 **Flags:**
@@ -79,12 +79,6 @@ The generator creates a `services/` folder to organize business logic:
 - **`example.service.ts`**: Template service handler to get started
 - **Additional services**: Create new files like `login.service.ts`, `register.service.ts`, etc.
 
-**Benefits:**
-- Keeps modules organized and maintainable
-- Separates concerns (one file per action)
-- Easier to test individual services
-- Reduces file size and complexity
-
 ## Generated Files
 
 ### 1. `[module].route.ts` - Express Router
@@ -93,27 +87,28 @@ The generator creates a `services/` folder to organize business logic:
 - Integrates validation middleware
 - Imports service handlers from `services/` folder
 - Exports router as camelCase variable
-- Example: `import { login, register } from "./services";`
+- Example: `import { createJob, getJobs } from "./services";`
 
 ### 2. `services/` folder - Business Logic
 
 #### `services/index.ts` - Barrel Export
 
 - Exports all service handlers
-- Example: `export * from "./login.service";`
+- Example: `export * from "./create-job.service";`
 
 #### `services/[action].service.ts` - Individual Handlers
 
 - Contains business logic for specific actions
 - Properly typed RequestHandler functions
-- Database operations using `db.[module]`
-- Consistent error handling using helper functions
+- Database operations using Drizzle ORM `db` and schema
+- Consistent error handling using `dbErrorHandler`
 - Standard JSON response format:
   ```typescript
   {
     status: number,
     message: string,
-    data: any | null
+    data: any | null,
+    success: boolean
   }
   ```
 
@@ -121,15 +116,15 @@ The generator creates a `services/` folder to organize business logic:
 
 ```typescript
 import type { RequestHandler } from "express";
-import { sendInternalError, sendSuccess } from "@/helpers";
+import { db, jobs } from "@/db";
+import { dbErrorHandler, sendSuccess } from "@/helpers";
 
-export const login: RequestHandler = async (req, res) => {
+export const getJobs: RequestHandler = async (req, res) => {
   try {
-    // Business logic here
-    return sendSuccess(res, 200, "Login successful", data);
+    const data = await db.select().from(jobs);
+    return sendSuccess(res, 200, "Jobs fetched successfully", data);
   } catch (error) {
-    console.log(error);
-    return sendInternalError(res, "Internal Server Error");
+    return dbErrorHandler(error, res, "Failed to retrieve jobs");
   }
 };
 ```
@@ -141,7 +136,7 @@ export const login: RequestHandler = async (req, res) => {
 - TypeScript type exports
 - Includes:
   - Base schema with all fields
-  - Create schema (omits \_id, timestamps)
+  - Create schema (omits auto-generated fields like id, timestamps)
   - Update schema (all fields optional)
   - ID parameter schema
   - Response schemas
@@ -165,36 +160,43 @@ The generator handles various input formats:
 
 After generating a module, you must:
 
-### 1. Create Database Model
+### 1. Create PostgreSQL Schema Table
 
-Create a Mongoose model in `src/db/models/`:
+Create a Drizzle table in `src/db/schema/`:
 
 ```typescript
-// src/db/models/job.model.ts
-import mongoose from "mongoose";
+// src/db/schema/job.schema.ts
+import { pgTable, text, timestamp, uuid, integer } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-const jobSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    // Add your fields here
-  },
-  { timestamps: true }
-);
+export const jobs = pgTable("jobs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  budget: integer("budget").default(0),
+  status: text("status").default("open"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull().$onUpdate(() => new Date()),
+});
 
-export const Job = mongoose.model("Job", jobSchema);
+export const insertJobSchema = createInsertSchema(jobs);
+export const selectJobSchema = createSelectSchema(jobs);
 ```
 
-### 2. Register Model in Database Index
+### 2. Register Schema in Database Index
 
-Add to `src/db/index.ts`:
+Add to `src/db/schema/index.ts`:
 
 ```typescript
-import { Job } from "./models/job.model";
+export * from "./example.schema";
+export * from "./job.schema"; // Add this line
+```
 
-export const db = {
-  user: User,
-  job: Job, // Add this line
-};
+Run migrations:
+```bash
+pnpm db:generate
+pnpm db:migrate
+# or for rapid prototyping:
+pnpm db:push
 ```
 
 ### 3. Register Route in App
@@ -215,131 +217,39 @@ import { adminUser } from "@/api/admin/user/user.route";
 app.use("/api/admin/users", adminUser);
 ```
 
-**Export naming convention:**
-- Top-level modules: Use module name (e.g., `job`, `auth`, `category`)
-- Nested modules: Use `parentModule` + `ModuleName` in camelCase (e.g., `adminUser`, `adminDashboard`)
-- This prevents naming conflicts between top-level and nested modules
-
 ### 4. Customize Schema
 
-Update the generated schema with your specific fields:
-
-```typescript
-export const JobSchema = z.object({
-  _id: z.string().openapi({ description: "Job ID" }),
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(10),
-  budget: z.number().positive(),
-  category: z.enum(["plumbing", "electrical", "cleaning"]),
-  status: z.enum(["open", "in_progress", "completed"]),
-  customerId: z.string(),
-  contractorId: z.string().optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
-});
-```
+Update the generated validation schema in `src/api/[module]/[module].validation.ts` with your specific validation rules.
 
 ### 5. Add Business Logic
 
-Create individual service files in the `services/` folder:
-
-**Example: `services/create-job.service.ts`**
+Create individual service files in the `services/` folder using Drizzle ORM:
 
 ```typescript
-import type { CreateJob } from "../job.validation";
-import { db } from "@/db";
-import { sendError, sendSuccess } from "@/helpers";
 import type { RequestHandler } from "express";
+import { db, jobs } from "@/db";
+import { dbErrorHandler, sendCreated } from "@/helpers";
 
-export const createJob: RequestHandler<{}, any, CreateJob> = async (
-  req,
-  res
-) => {
+export const createJob: RequestHandler = async (req, res) => {
   try {
-    // Add custom validation
-    if (req.body.budget < 10) {
-      return sendError(res, 400, "Budget must be at least $10");
-    }
-
-    // Add authentication context
-    const job = await db.job.create({
-      ...req.body,
-      customerId: req.user.id, // From auth middleware
-      status: "open",
-    });
-
-    return sendSuccess(res, 201, "Job created successfully", job);
+    const [newJob] = await db.insert(jobs).values(req.body).returning();
+    return sendCreated(res, "Job created successfully", newJob);
   } catch (error) {
-    console.log(error);
-    return sendError(res, 500, "Internal Server Error");
+    return dbErrorHandler(error, res, "Failed to create job");
   }
 };
 ```
 
-**Then export in `services/index.ts`:**
-
-```typescript
-export * from "./create-job.service";
-export * from "./get-jobs.service";
-export * from "./update-job.service";
-export * from "./delete-job.service";
-```
-
-**Use in route file:**
-
-```typescript
-import { createJob, getJobs, updateJob, deleteJob } from "./services";
-
-job.post("/", validateBody(CreateJobSchema), createJob);
-job.get("/", getJobs);
-job.put("/:id", validateBody(UpdateJobSchema), updateJob);
-job.delete("/:id", deleteJob);
-```
+Export in `services/index.ts` and use in `job.route.ts`.
 
 ## Features
 
 - ✅ Full CRUD operations out of the box
 - ✅ Zod validation with OpenAPI documentation
+- ✅ PostgreSQL table definitions with Drizzle ORM
 - ✅ TypeScript types automatically exported
-- ✅ Consistent error handling
+- ✅ Consistent error handling with `dbErrorHandler`
 - ✅ Standard response format
 - ✅ Path alias support (`@/`)
 - ✅ Follows project conventions
 - ✅ No additional dependencies required
-
-## Script Location
-
-`script/generate-module.js`
-
-## Documentation
-
-- `script/README.md` - Main documentation
-- `script/USAGE_EXAMPLES.md` - Detailed examples
-- `script/CHANGELOG.md` - Version history
-
-## When to Use
-
-Use the module generator when:
-
-- Creating new API endpoints
-- Adding new resource types (jobs, bookings, reviews, etc.)
-- Building CRUD operations for new entities
-- Maintaining consistent code structure
-
-## When NOT to Use
-
-Don't use the generator for:
-
-- Authentication endpoints (use existing auth module)
-- WebSocket handlers (different pattern)
-- Webhook endpoints (different pattern)
-- Static file serving
-- Middleware functions
-
-## Tips
-
-- Always run `bun check-types` after generation to verify TypeScript
-- Customize the generated code to fit your specific needs
-- The generator creates a starting point, not a final implementation
-- Add authentication middleware to routes as needed
-- Consider adding rate limiting for public endpoints

@@ -1,2 +1,2 @@
-export * from "./mongodb-error-handler";
+export * from "./db-error-handler";
 export * from "./response-handler";

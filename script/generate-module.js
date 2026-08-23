@@ -76,7 +76,7 @@ const generateServiceIndex = () => {
 // Generate example service template
 const generateExampleService = (moduleName) => {
   return `import type { RequestHandler } from "express";
-import { sendInternalError, sendSuccess } from "@/helpers";
+import { dbErrorHandler, sendSuccess } from "@/helpers";
 
 // TODO: Implement your service handler
 // Example: Get all ${moduleName}
@@ -84,11 +84,10 @@ export const getAll${toPascalCase(
     moduleName
   )}: RequestHandler = async (req, res) => {
   try {
-    // Add your business logic here
+    // Add your business logic or Drizzle queries here
     return sendSuccess(res, 200, "Success", null);
   } catch (error) {
-    console.log(error);
-    return sendInternalError(res, "Internal Server Error");
+    return dbErrorHandler(error, res, "Failed to process ${moduleName}");
   }
 };
 `;

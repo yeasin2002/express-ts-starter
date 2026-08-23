@@ -1,18 +1,18 @@
 # Node Express Starter — Agent Steering Guide
 
-This steering guide provides the definitive context, architecture specifications, and technical standards for working on this **Express 5 + TypeScript** REST API starter template.
+This steering guide provides the definitive context, architecture specifications, and technical standards for working on this **Express 5 + TypeScript + PostgreSQL (Drizzle ORM)** REST API starter template.
 
 The guide is organized into three core sections:
 1. **[Product](#1-product)** — High-level purpose, centralized naming/branding, architecture goals, and core product capabilities.
-2. **[Structure](#2-structure)** — Complete file tree, module pattern, scaffolding workflow, database patterns, and middleware pipeline.
-3. **[Tech](#3-tech)** — Tech stack specifications, TypeScript rules, helper API references, scripts, linting/formatting, and environment configuration.
+2. **[Structure](#2-structure)** — Complete file tree, module pattern, scaffolding workflow, database patterns, Docker Compose services, and middleware pipeline.
+3. **[Tech](#3-tech)** — Tech stack specifications, TypeScript rules, Drizzle ORM helpers, API references, scripts, linting/formatting, and environment configuration.
 
 ---
 
 ## 1. Product
 
 ### Overview & Mission
-This repository is a production-ready, highly structured **Express 5 + TypeScript REST API starter template** built with **Node.js, Express.js, and modern TypeScript tooling**. It is engineered to serve as a solid, scalable boilerplate for RESTful web services and backend APIs, providing a standardized developer framework where every domain module follows an identical, predictable pattern.
+This repository is a production-ready, highly structured **Express 5 + TypeScript + PostgreSQL REST API starter template** built with **Node.js, Express.js, Drizzle ORM, and modern TypeScript tooling**. It is engineered to serve as a solid, scalable boilerplate for RESTful web services and backend APIs, providing a standardized developer framework where every domain module follows an identical, predictable pattern.
 
 ### Centralized Application Name & Metadata
 The application identity, name, and metadata are centralized in `src/common/constants.ts` under `APP_CONFIG`. Changing the configuration values in this single location automatically updates the metadata across the entire codebase (including OpenAPI documentation, API headers, and server logs):
@@ -23,20 +23,21 @@ export const APP_CONFIG = {
 	displayName: "Node Express Starter",
 	title: "Node Express Starter API",
 	description:
-		"Production-ready REST API starter template built with Node.js, Express 5, and TypeScript",
+		"Production-ready REST API starter template built with Node.js, Express 5, TypeScript, and Drizzle ORM",
 	version: "1.0.0",
 } as const;
 ```
 
 ### Key Capabilities & Core Features
 - **Modular Domain Architecture**: Domain resources are completely self-contained within dedicated module directories under `src/api/`, separating routes, schemas, OpenAPI contracts, and isolated service handlers.
+- **Relational Data Modeling with Drizzle ORM**: Type-safe PostgreSQL table schemas (`src/db/schema/`) using **Drizzle ORM** with **node-postgres (`pg`)** connection pooling and **drizzle-kit** migration tooling.
+- **Containerized Development Environment**: Multi-service **Docker Compose** configuration orchestrating **PostgreSQL 16**, **Redis 7**, and **MinIO (S3 compatible object storage)**.
 - **Automated CLI Module Generator**: Built-in scaffolding script (`script/generate-module.js` / `pnpm generate:module`) to generate standardized top-level or nested sub-modules with zero manual boilerplate.
-- **End-to-End Type Safety & Schema Validation**: Runtime request validation powered by **Zod**, seamlessly coupled with **@asteasolutions/zod-to-openapi** for automatic TypeScript type inference and OpenAPI 3.0 specification generation.
+- **End-to-End Type Safety & Schema Validation**: Runtime request validation powered by **Zod** and **drizzle-zod**, seamlessly coupled with **@asteasolutions/zod-to-openapi** for automatic TypeScript type inference and OpenAPI 3.0 specification generation.
 - **Dual Interactive API Documentation**: Integrated live interactive documentation with **Scalar UI** (`/scaler`) and **Swagger UI** (`/swagger`), along with the raw JSON OpenAPI schema (`/api-docs.json`).
 - **Robust Authentication & RBAC**: JWT Access (15-day) and Refresh Tokens (30-day with cryptographic `jti`), Bcrypt password hashing, 4-digit OTP generation, and composable authorization middlewares for role checks and resource ownership verification.
 - **Standardized Response Envelope**: Uniform HTTP responses across all endpoints adhering to the `ApiResponse<T>` contract (`status`, `message`, `data`, `success`, `errors`).
-- **Centralized MongoDB Error Translation**: Automatic parsing of Mongoose errors (`CastError`, `ValidationError`, duplicate key `E11000`) into clean, client-friendly HTTP 400 bad request responses.
-- **Intelligent Database Defaults**: Global Mongoose plugin (`applyDefaultsPlugin`) registered before model compilation to guarantee that missing fields deserialize to sensible defaults (`""`, `0`, `false`, `[]`) rather than `undefined`.
+- **Centralized PostgreSQL Error Translation**: Automatic parsing of PostgreSQL database error codes (`23505` unique violation, `23503` foreign key violation, `23502` not null violation, `22P02` invalid format/UUID) into clean, client-friendly HTTP 400 bad request responses via `dbErrorHandler`.
 - **Enterprise Structured Logging**: Daily rotating multi-file logging using **Winston** (`error`, `combined`, `http` logs with automated retention policies), uncaught exception safety handlers, and custom colorized **Morgan** HTTP request logging with client IP tracking.
 - **Multipart File Upload Handling**: **Multer** disk storage for image uploads (JPEG, PNG, GIF, WebP, SVG) with a 5MB limit, unique timestamp naming, and static file serving from `/uploads`.
 - **Transactional Email Transport**: **Nodemailer** transporter pre-configured for SMTP/Gmail integration.
@@ -59,6 +60,7 @@ express-ts-starter/
 ├── doc/
 │   ├── module-generator.md                # Comprehensive documentation for the module generator
 │   └── openapi-pattern.md                 # Detailed OpenAPI registration & schema guidelines
+├── drizzle/                               # Drizzle migrations output directory
 ├── script/
 │   └── generate-module.js                 # Interactive & flag-driven module scaffolding CLI
 ├── src/
@@ -77,17 +79,17 @@ express-ts-starter/
 │   ├── data/
 │   │   └── index.ts                       # Static seed or lookup data
 │   ├── db/
-│   │   ├── index.ts                       # Central db registry mapping keys to Mongoose models
-│   │   └── models/                        # Mongoose model definitions
-│   │       └── [model].model.ts
+│   │   ├── index.ts                       # Drizzle ORM client, pool, and schema exports
+│   │   └── schema/                        # PostgreSQL table definitions
+│   │       ├── index.ts                   # Schema barrel export
+│   │       └── example.schema.ts          # Example table & drizzle-zod schemas
 │   ├── helpers/
 │   │   ├── index.ts                       # Barrel export for helpers
 │   │   ├── response-handler.ts            # Standard API response wrappers & ResponseHandler class
-│   │   └── mongodb-error-handler.ts       # Mongoose exception mapper & ObjectId validator
+│   │   └── db-error-handler.ts            # PostgreSQL & Drizzle exception mapper & UUID validator
 │   ├── lib/
 │   │   ├── index.ts                       # Barrel export for lib utilities
-│   │   ├── apply-defaults.mongoose-plugins.ts # Global Mongoose plugin for sensible defaults
-│   │   ├── connect-mongo.ts               # MongoDB connection initializer
+│   │   ├── connect-db.ts                  # PostgreSQL connection test initializer
 │   │   ├── get-my-ip.ts                   # Local network IPv4 address resolver
 │   │   ├── jwt.ts                         # JWT sign/verify, bcrypt hash/compare, OTP generator
 │   │   ├── logger.ts                      # Winston logger with daily rotating file transports
@@ -108,12 +110,31 @@ express-ts-starter/
 ├── .gitignore                             # Git ignore definitions
 ├── .oxlintrc.json                         # Oxlint semantic linting rules
 ├── biome.json                             # Biome formatter & linter configuration
+├── docker-compose.yml                     # PostgreSQL, Redis, and MinIO container configuration
+├── drizzle.config.ts                      # Drizzle Kit migration configuration
 ├── globals.d.ts                           # Global TypeScript declarations & Request extensions
 ├── package.json                           # Scripts and dependency declarations
 ├── pnpm-lock.yaml                         # Deterministic pnpm lockfile
 ├── pnpm-workspace.yaml                    # Workspace config (pnpm settings)
 ├── tsconfig.json                          # TypeScript compiler configuration
 └── tsdown.config.ts                       # tsdown production build configuration
+```
+
+---
+
+### Docker Compose Services
+
+The `docker-compose.yml` provides a localized infrastructure for development:
+
+| Service | Container Name | Internal Port | Host Port | Credentials / Defaults |
+|---|---|---|---|---|
+| **PostgreSQL 16** | `node-express-postgres` | `5432` | `5432` | DB: `node_express_db`, User: `postgres`, Pass: `postgres` |
+| **Redis 7** | `node-express-redis` | `6379` | `6379` | No auth by default |
+| **MinIO (S3)** | `node-express-minio` | `9000` (API), `9001` (Console) | `9000`, `9001` | User: `minioadmin`, Pass: `minioadminpassword` |
+
+To spin up local infrastructure:
+```bash
+docker compose up -d
 ```
 
 ---
@@ -153,7 +174,7 @@ user.post("/", requireAuth, validateBody(CreateUserSchema), createUser);
 
 #### 2. `[module].validation.ts`
 - Always calls `extendZodWithOpenApi(z)` at the top of the file.
-- Defines a base schema, then derives create/update/param/response schemas using `.omit()`, `.partial()`, etc.
+- Defines a base schema (or uses `drizzle-zod`), then derives create/update/param/response schemas.
 - Uses `.openapi("SchemaName")` to attach metadata for Swagger/Scalar documentation.
 - Exports inferred TypeScript types via `z.infer<typeof Schema>`.
 
@@ -164,7 +185,7 @@ import { z } from "zod";
 extendZodWithOpenApi(z);
 
 export const UserSchema = z.object({
-  _id: z.string().openapi({ description: "User unique ID", example: "66f1a2b3c4d5e6f7a8b9c0d1" }),
+  id: z.string().uuid().openapi({ description: "User unique ID", example: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11" }),
   name: z.string().min(1, "Name is required").openapi({ description: "Full name", example: "John Doe" }),
   email: z.string().email("Invalid email").openapi({ description: "Email address", example: "john@example.com" }),
   role: z.enum(["customer", "contractor", "admin"]).openapi({ description: "User role" }),
@@ -172,9 +193,9 @@ export const UserSchema = z.object({
   updatedAt: z.date().optional(),
 }).openapi("User");
 
-export const CreateUserSchema = UserSchema.omit({ _id: true, createdAt: true, updatedAt: true }).openapi("CreateUser");
+export const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true, updatedAt: true }).openapi("CreateUser");
 export const UpdateUserSchema = UserSchema.partial().openapi("UpdateUser");
-export const UserIdSchema = z.object({ id: z.string().min(1) }).openapi("UserIdParam");
+export const UserIdSchema = z.object({ id: z.string().uuid() }).openapi("UserIdParam");
 
 export const UserResponseSchema = z.object({
   status: z.number(),
@@ -231,19 +252,19 @@ registry.registerPath({
 #### 4. `services/[action].service.ts`
 - Each service file exports a single, dedicated `RequestHandler`.
 - **Never call `res.json()` directly** — always return response helpers (`sendSuccess`, `sendCreated`, `sendBadRequest`, etc.) from `@/helpers`.
-- Wraps database operations in `try / catch` blocks and uses `exceptionErrorHandler(error, res, defaultMessage)` from `@/helpers`.
+- Wraps database operations in `try / catch` blocks and uses `dbErrorHandler(error, res, defaultMessage)` from `@/helpers`.
 
 ```typescript
 import type { RequestHandler } from "express";
-import { sendCreated, exceptionErrorHandler } from "@/helpers";
-import { db } from "@/db";
+import { sendCreated, dbErrorHandler } from "@/helpers";
+import { db, users } from "@/db";
 
 export const createUser: RequestHandler = async (req, res) => {
   try {
-    const newUser = await db.user.create(req.body);
+    const [newUser] = await db.insert(users).values(req.body).returning();
     return sendCreated(res, "User created successfully", newUser);
   } catch (error) {
-    return exceptionErrorHandler(error, res, "Failed to create user");
+    return dbErrorHandler(error, res, "Failed to create user");
   }
 };
 ```
@@ -266,24 +287,12 @@ pnpm generate:module --module user
 pnpm generate:module --sub admin --module user
 ```
 
-#### Naming & Export Conventions
-- **Top-level modules** (e.g. `--module user`):
-  - Path: `src/api/user/`
-  - Route file: `user.route.ts`
-  - Router export: `export const user: Router = ...`
-  - Route base path: `/api/user`
-- **Nested sub-modules** (e.g. `--sub admin --module user`):
-  - Path: `src/api/admin/user/`
-  - Route file: `user.route.ts`
-  - Router export: `export const adminUser: Router = ...` (camelCase combination of parent + module)
-  - Route base path: `/api/admin/user`
-
 #### 5-Step Post-Generation Lifecycle
 After generating a new module:
 1. **Define Schemas**: Flesh out fields in `[module].validation.ts`.
-2. **Create Mongoose Model**: Create `src/db/models/[model].model.ts`.
-3. **Register Model in DB Index**: Add model to `db` object in `src/db/index.ts`.
-4. **Implement Business Logic**: Create granular handlers in `services/` and export in `services/index.ts`.
+2. **Create Table Schema**: Create table in `src/db/schema/[module].schema.ts`.
+3. **Register Table in Schema Index**: Add schema export to `src/db/schema/index.ts` and run `pnpm db:push` or `pnpm db:generate`.
+4. **Implement Business Logic**: Create granular handlers in `services/` using Drizzle ORM and export in `services/index.ts`.
 5. **Mount Router in `src/app.ts`**: Import and mount the router before `notFoundHandler`:
    ```typescript
    import { user } from "@/api/user/user.route";
@@ -293,39 +302,47 @@ After generating a new module:
 
 ---
 
-### Database Architecture & Model Registry
+### Database Architecture & Drizzle ORM
 
-Mongoose models are centralized under `src/db/`:
+Database schema and connection pooling are centralized under `src/db/`:
 
-1. **Model Definition (`src/db/models/[model].model.ts`)**:
+1. **Table Schema (`src/db/schema/[model].schema.ts`)**:
    ```typescript
-   import mongoose from "mongoose";
+   import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+   import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
-   const userSchema = new mongoose.Schema(
-     {
-       name: { type: String, required: true },
-       email: { type: String, required: true, unique: true },
-       role: { type: String, enum: ["customer", "contractor", "admin"], default: "customer" },
-     },
-     { timestamps: true }
-   );
+   export const users = pgTable("users", {
+     id: uuid("id").primaryKey().defaultRandom(),
+     name: text("name").notNull(),
+     email: text("email").notNull().unique(),
+     role: text("role").default("customer").notNull(),
+     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull().$onUpdate(() => new Date()),
+   });
 
-   export const User = mongoose.model("User", userSchema);
+   export const insertUserSchema = createInsertSchema(users);
+   export const selectUserSchema = createSelectSchema(users);
    ```
 
-2. **Model Registry (`src/db/index.ts`)**:
+2. **Schema Registry (`src/db/schema/index.ts`)**:
    ```typescript
-   import { User } from "./models/user.model";
-
-   export const db = {
-     user: User,
-   };
+   export * from "./example.schema";
+   export * from "./user.schema";
    ```
 
-3. **Global Defaults Plugin (`src/lib/apply-defaults.mongoose-plugins.ts`)**:
-   - Registered globally via `mongoose.plugin(applyDefaultsPlugin)` inside `connectDB()`.
-   - Intercepts document initialization (`post("init")`) and JSON serialization (`toObject` / `toJSON`).
-   - Automatically populates missing or undefined fields with sensible fallbacks: `String` &rarr; `""`, `Number` &rarr; `0`, `Boolean` &rarr; `false`, `Array` &rarr; `[]`.
+3. **Drizzle Client (`src/db/index.ts`)**:
+   ```typescript
+   import { drizzle } from "drizzle-orm/node-postgres";
+   import { Pool } from "pg";
+   import * as schema from "./schema";
+
+   export const pool = new Pool({
+     connectionString: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/node_express_db",
+   });
+
+   export const db = drizzle(pool, { schema });
+   export * from "./schema";
+   ```
 
 ---
 
@@ -348,44 +365,6 @@ flowchart TD
     ServiceHandler -.->|Exception| GlobalError[errorHandler 500]
 ```
 
-1. **Body Parsing**: `express.json()`, `express.urlencoded({ extended: true })`
-2. **Static Assets**: `express.static("uploads")` mounted at `/uploads`
-3. **HTTP Logging**: Morgan with custom colorized format (`morganDevFormat`)
-4. **CORS**: Configured origins and allowed headers/methods
-5. **Documentation Endpoints**: `/swagger`, `/scaler`, `/api-docs.json`
-6. **API Routes**: Mounted domain routers (e.g. `/api/user`)
-7. **404 Handler**: `notFoundHandler` catches unmatched routes
-8. **500 Global Error Handler**: `errorHandler` formats unhandled exceptions
-
----
-
-### Centralized Constants & OpenAPI Integration
-
-Application metadata, path prefixes, and tags are centralized in `src/common/constants.ts`:
-
-```typescript
-export const APP_CONFIG = {
-  name: "node-express-starter",
-  displayName: "Node Express Starter",
-  title: "Node Express Starter API",
-  description: "Production-ready REST API starter template built with Node.js, Express 5, and TypeScript",
-  version: "1.0.0",
-} as const;
-
-export const openAPITags = {
-  example: { name: "Example", basepath: "/api/example" },
-};
-
-export const mediaTypeFormat = {
-  json: "application/json",
-  form: "multipart/form-data",
-};
-```
-
-> [!IMPORTANT]
-> **OpenAPI Document Generation Order**:
-> In `src/app.ts`, all route files (which trigger `.openapi.ts` side-effect imports) **must be imported before** `generateOpenAPIDocument()` is invoked.
-
 ---
 
 ## 3. Tech
@@ -396,8 +375,8 @@ export const mediaTypeFormat = {
 |---|---|---|---|
 | **Runtime** | Node.js (with `tsx`) / Bun | Node >= 20 / Bun | Modern TypeScript execution and hot reload |
 | **Framework** | `express` | `^5.1.0` | Next-generation Express 5 with native async support |
-| **Database** | `mongoose` / `mongodb` | `^8.19.2` / `^6.20.0` | ODM & MongoDB driver |
-| **Validation** | `zod` | `^4.1.12` | Schema validation and type inference |
+| **Database & ORM** | `pg`<br>`drizzle-orm`<br>`drizzle-kit` | `^8.13.3`<br>`^0.39.3`<br>`^0.30.4` | PostgreSQL driver, type-safe SQL ORM, and migration CLI |
+| **Validation** | `zod`<br>`drizzle-zod` | `^4.1.12`<br>`^0.7.0` | Schema validation and table-to-Zod schema generation |
 | **OpenAPI** | `@asteasolutions/zod-to-openapi` | `^8.1.0` | Zod schema transformation to OpenAPI 3.0 |
 | **API Docs UI** | `@scalar/express-api-reference`<br>`swagger-ui-express`<br>`openapi3-ts` | `^0.8.22`<br>`^5.0.1`<br>`^4.5.0` | Dual interactive documentation interfaces (Scalar & Swagger) |
 | **Authentication** | `jsonwebtoken`<br>`bcryptjs` | `^9.0.2`<br>`^3.0.2` | JWT access/refresh token lifecycle and password hashing |
@@ -425,8 +404,12 @@ export const mediaTypeFormat = {
 | `pnpm check-types` | `tsc -b` | TypeScript project type-check without emit |
 | `pnpm check` | `oxlint` | Fast semantic TypeScript lint check |
 | `pnpm format` | `biome format --write ./src` | Code formatting with Biome |
+| `pnpm db:generate` | `drizzle-kit generate` | Generate SQL migration files from Drizzle schema |
+| `pnpm db:migrate` | `drizzle-kit migrate` | Apply pending SQL migrations to PostgreSQL |
+| `pnpm db:push` | `drizzle-kit push` | Push schema directly to database (prototyping) |
+| `pnpm db:studio` | `drizzle-kit studio` | Launch interactive Drizzle Studio database browser |
+| `pnpm db:drop` | `drizzle-kit drop` | Drop migrations |
 | `pnpm generate:module` | `node script/generate-module.js` | Scaffold a new API domain module |
-| `pnpm ruler:apply` | `pnpm dlx @intellectronica/ruler@latest apply --local-only` | Apply AI cursor / IDE agent steering rules |
 
 ---
 
@@ -438,18 +421,6 @@ export const mediaTypeFormat = {
   import type { Request, Response, NextFunction, RequestHandler } from "express";
   ```
 - **Strict Mode**: Full TypeScript strict mode enabled (`strict: true`, `target: ESNext`, `moduleResolution: bundler`).
-- **Global Type Augmentation**:
-  - `Express.Request.user`: `{ userId: string; email: string; role: "customer" | "contractor" | "admin" }` (in `src/middleware/auth.middleware.ts`).
-  - `Express.Request.body`: Extensible request body definitions (in `globals.d.ts`).
-
----
-
-### Formatting & Linting Strategy
-
-The project utilizes a specialized dual toolchain:
-- **Biome (`biome.json`)**: Handles code formatting (indentation with **tabs**, **double quotes**, and automatic import organization).
-- **Oxlint (`.oxlintrc.json`)**: Provides blazing-fast semantic linting checks (catches floating promises, unused variables, regex issues, and unsafe async operations).
-- **Pre-commit**: `husky` triggers `lint-staged` on all staged TypeScript/JavaScript files to run `oxlint` before commits.
 
 ---
 
@@ -478,13 +449,15 @@ Standard response format across all endpoints:
 | `sendInternalError(res, message?)` | 500 | Unhandled server error (logs to Winston) |
 | `createResponseHandler(res)` | Chainable class | Instance of `ResponseHandler` for method chaining |
 
-#### 2. MongoDB Error Handler (`@/helpers/mongodb-error-handler.ts`)
-- **`exceptionErrorHandler(error, res, defaultMessage)`**: Catches Mongoose errors and returns appropriate HTTP responses:
-  - `CastError` &rarr; 400 (`"Invalid ID format provided"`)
-  - `ValidationError` &rarr; 400 (Maps field paths and validation messages)
-  - Duplicate key error (`E11000`) &rarr; 400 (`"Duplicate value for <field>"`)
+#### 2. PostgreSQL & Drizzle Error Handler (`@/helpers/db-error-handler.ts`)
+- **`dbErrorHandler(error, res, defaultMessage)`**: Catches PostgreSQL errors and returns appropriate HTTP responses:
+  - `23505` (unique_violation) &rarr; 400 (`"Duplicate entry for <field>"`)
+  - `23503` (foreign_key_violation) &rarr; 400 (`"Foreign key violation: The referenced entity does not exist"`)
+  - `23502` (not_null_violation) &rarr; 400 (`"Missing required field: <column>"`)
+  - `22P02` (invalid_text_representation) &rarr; 400 (`"Invalid input format provided"`)
+  - `22001` (string_data_right_truncation) &rarr; 400 (`"Input value exceeds the maximum allowed length"`)
   - Other errors &rarr; 500 internal server error
-- **`validateObjectIds(ids: string[])`**: Utility returning `{ isValid: boolean, invalidIds: string[] }`.
+- **`isValidUUID(id: string)`**: Utility verifying UUID string syntax.
 
 #### 3. Authentication & RBAC Middleware (`@/middleware/auth.middleware.ts`)
 - **`requireAuth`**: Validates `Authorization: Bearer <token>`, decodes payload, and populates `req.user`.
@@ -496,7 +469,7 @@ Standard response format across all endpoints:
 #### 4. Validation Middleware (`@/middleware/validation.middleware.ts`)
 - **`validateBody(Schema)`**: Parses `req.body` and attaches typed output.
 - **`validateParams(Schema)`**: Parses route parameters (`req.params`).
-- **`validateQuery(Schema)`**: Validates query parameters (`req.query` assigned cleanly for Express 5 compatibility).
+- **`validateQuery(Schema)`**: Validates query parameters (`req.query`).
 - **`validate({ body?, params?, query? })`**: Combined multi-target validation.
 
 #### 5. JWT & Cryptography Utilities (`@/lib/jwt.ts`)
@@ -511,16 +484,6 @@ Standard response format across all endpoints:
   - `logs/error-YYYY-MM-DD.log` (14-day retention, 20MB max)
   - `logs/combined-YYYY-MM-DD.log` (14-day retention, 20MB max)
   - `logs/http-YYYY-MM-DD.log` (7-day retention, 20MB max)
-- Helper functions: `logInfo(msg, meta)`, `logError(msg, err, meta)`, `logWarn(msg, meta)`, `logDebug(msg, meta)`, `logHttp(msg, meta)`.
-
-#### 7. File Upload Service (`@/lib/multer.ts`)
-- `upload.single("file")` / `upload.array("files", maxCount)`: Multer disk storage targeting `uploads/`.
-- Permitted image types: JPEG, PNG, GIF, WebP, SVG (5MB size limit).
-- `getFileUrl(filename)`: Returns `/uploads/${filename}` URL.
-- `deleteFile(filename)`: Asynchronously unlinks file from the uploads directory.
-
-#### 8. Email Transporter (`@/lib/nodemailer.ts`)
-- `nodemailerTransporter`: Pre-configured Nodemailer Gmail SMTP instance consuming `SMTP_USER` and `SMTP_PASS`.
 
 ---
 
@@ -528,9 +491,14 @@ Standard response format across all endpoints:
 
 | Variable | Description | Default / Example |
 |---|---|---|
-| `DATABASE_URL` | MongoDB connection URI | `mongodb://localhost:27017` |
-| `PORT` | HTTP server listening port | `4000` (or `5000` default fallback) |
-| `API_BASE_URL` | Base API URL used in OpenAPI server configuration | `http://localhost:4000` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/node_express_db` |
+| `REDIS_URL` | Redis connection URL | `redis://localhost:6379` |
+| `MINIO_ENDPOINT` | MinIO / S3 storage host | `localhost` |
+| `MINIO_PORT` | MinIO API port | `9000` |
+| `MINIO_ACCESS_KEY` | MinIO access key | `minioadmin` |
+| `MINIO_SECRET_KEY` | MinIO secret key | `minioadminpassword` |
+| `PORT` | HTTP server listening port | `4000` |
+| `API_BASE_URL` | Base API URL used in OpenAPI configuration | `http://localhost:4000` |
 | `CORS_ORIGIN` | Allowed CORS origins | `http://localhost:3000` |
 | `ACCESS_SECRET` | JWT Access Token secret key | Secret string (must set in production) |
 | `REFRESH_SECRET` | JWT Refresh Token secret key | Secret string (must set in production) |

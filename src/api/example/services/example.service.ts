@@ -1,14 +1,13 @@
+import { db, examples } from "@/db";
+import { dbErrorHandler, sendSuccess } from "@/helpers";
 import type { RequestHandler } from "express";
-import { sendInternalError, sendSuccess } from "@/helpers";
 
-// TODO: Implement your service handler
-// Example: Get all example
-export const getAllExample: RequestHandler = async (req, res) => {
+// Example: Get all examples from database
+export const getAllExample: RequestHandler = async (_req, res) => {
 	try {
-		// Add your business logic here
-		return sendSuccess(res, 200, "Success", null);
+		const result = await db.select().from(examples);
+		return sendSuccess(res, 200, "Examples retrieved successfully", result);
 	} catch (error) {
-		console.log(error);
-		return sendInternalError(res, "Internal Server Error");
+		return dbErrorHandler(error, res, "Failed to retrieve examples");
 	}
 };

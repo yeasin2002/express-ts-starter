@@ -5,9 +5,7 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 
-// common routes
-
-import { generateOpenAPIDocument } from "@/lib";
+import { connectDB, generateOpenAPIDocument } from "@/lib";
 import { errorHandler, notFoundHandler } from "@/middleware";
 
 import { getLocalIP } from "./lib/get-my-ip";
@@ -22,7 +20,7 @@ app.use(morgan(morganDevFormat));
 
 app.use(
 	cors({
-		origin: ["http://localhost:5173", "http://localhost:5173", "*"],
+		origin: ["http://localhost:5173", "http://localhost:3000", "*"],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		credentials: true,
 	}),
@@ -53,7 +51,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 app.listen(port, async () => {
-	// await connectDB();
+	await connectDB();
 
 	console.log(`🚀 Server is running on port http://localhost:${port}`);
 	console.log(`✨ Server is running on port http://${getLocalIP()}:${port} \n`);
