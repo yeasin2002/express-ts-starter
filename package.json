@@ -1,5 +1,5 @@
 {
-  "name": "job-sphere",
+  "name": "expres-starter",
   "main": "src/app.ts",
   "type": "module",
   "scripts": {
