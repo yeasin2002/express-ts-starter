@@ -1,3 +1,4 @@
+import { APP_CONFIG } from "@/common/constants";
 import {
 	OpenAPIRegistry,
 	OpenApiGeneratorV3,
@@ -12,9 +13,9 @@ export const generateOpenAPIDocument = (): OpenAPIObject => {
 	return generator.generateDocument({
 		openapi: "3.0.0",
 		info: {
-			title: "JobSphere Org API",
-			version: "1.0.0",
-			description: "Backend API service for JobSphere Organization",
+			title: APP_CONFIG.title,
+			version: APP_CONFIG.version,
+			description: APP_CONFIG.description,
 		},
 		servers: [
 			{

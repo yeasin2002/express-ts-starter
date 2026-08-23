@@ -2,7 +2,7 @@
 
 ## Overview
 
-JobSphere includes an automated module scaffolding tool that generates boilerplate code for new API modules. This significantly speeds up development by creating consistent, type-safe module structures.
+This starter template includes an automated module scaffolding tool that generates boilerplate code for new API modules. This significantly speeds up development by creating consistent, type-safe module structures.
 
 ## Usage
 

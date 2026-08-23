@@ -1,7 +1,6 @@
+import "./example.openapi";
 
-  import "./example.openapi";
-
-  import express, { type Router } from "express";
+import express, { type Router } from "express";
 
 export const example: Router = express.Router();
 

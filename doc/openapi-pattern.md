@@ -2,7 +2,7 @@
 
 ## Overview
 
-JobSphere uses `@asteasolutions/zod-to-openapi` to generate OpenAPI documentation from Zod schemas. Each API module has a dedicated `.openapi.ts` file that registers schemas and routes with the global OpenAPI registry.
+This starter uses `@asteasolutions/zod-to-openapi` to generate OpenAPI documentation from Zod schemas. Each API module has a dedicated `.openapi.ts` file that registers schemas and routes with the global OpenAPI registry.
 
 ## File Structure Per Module
 
@@ -300,6 +300,7 @@ import "./user.openapi";
 The global registry is configured in `src/lib/openapi.ts`:
 
 ```typescript
+import { APP_CONFIG } from "@/common/constants";
 import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
@@ -312,9 +313,9 @@ export const generateOpenAPIDocument = () => {
   return generator.generateDocument({
     openapi: "3.0.0",
     info: {
-      title: "JobSphere API",
-      version: "1.0.0",
-      description: "Backend API service for JobSphere marketplace",
+      title: APP_CONFIG.title,
+      version: APP_CONFIG.version,
+      description: APP_CONFIG.description,
     },
     servers: [
       {

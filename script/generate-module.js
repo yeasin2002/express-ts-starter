@@ -169,7 +169,7 @@ registry.registerPath({
 
 async function main() {
   try {
-    console.log("🚀 Module Generator for JobSphere API\n");
+    console.log("🚀 Module Generator for Node Express Starter API\n");
 
     // Validate flags
     if (subModuleFlag && !parentModuleName) {
