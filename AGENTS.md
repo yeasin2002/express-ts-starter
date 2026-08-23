@@ -401,6 +401,14 @@ flowchart TD
 | `pnpm build` | `tsdown` | Production bundle & TypeScript declaration build |
 | `pnpm start` | `node dist/app.js` | Run compiled production bundle |
 | `pnpm compile` | `bun build --compile ...` | Compile standalone binary server executable via Bun |
+| `pnpm docker:up` | `docker compose up -d` | Start containers in background using Docker |
+| `pnpm docker:down` | `docker compose down` | Stop and remove Docker containers |
+| `pnpm docker:logs` | `docker compose logs -f` | Follow live Docker container logs |
+| `pnpm docker:restart` | `docker compose restart` | Restart Docker container services |
+| `pnpm podman:up` | `podman compose up -d` | Start containers in background using Podman |
+| `pnpm podman:down` | `podman compose down` | Stop and remove Podman containers |
+| `pnpm podman:logs` | `podman compose logs -f` | Follow live Podman container logs |
+| `pnpm podman:restart` | `podman compose restart` | Restart Podman container services |
 | `pnpm check-types` | `tsc -b` | TypeScript project type-check without emit |
 | `pnpm check` | `oxlint` | Fast semantic TypeScript lint check |
 | `pnpm format` | `biome format --write ./src` | Code formatting with Biome |
