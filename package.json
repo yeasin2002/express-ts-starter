@@ -63,7 +63,7 @@
 		"@types/pg": "^8.11.11",
 		"@types/swagger-ui-express": "^4.1.8",
 		"drizzle-kit": "^0.30.4",
-		"lefthook": "^1.11.3",
+		"lefthook": "^2.1.10",
 		"oxlint": "^1.24.0",
 		"tsdown": "^0.15.9",
 		"tsx": "^4.20.6",
