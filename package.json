@@ -44,7 +44,7 @@
 		"express-serve-static-core": "^0.1.1",
 		"firebase-admin": "^13.5.0",
 		"jsonwebtoken": "^9.0.2",
-		"morgan": "^1.10.1",
+		"morgan": "^1.11.0",
 		"multer": "^2.0.2",
 		"nodemailer": "^7.0.10",
 		"openapi3-ts": "^4.5.0",
